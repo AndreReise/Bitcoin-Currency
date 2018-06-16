@@ -2,6 +2,7 @@
 using System;
 using System.Net;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Bitcoin_Currency
 {
@@ -9,12 +10,46 @@ namespace Bitcoin_Currency
     {
         static void Main()
         {
-            var info = GetExchangeInfo("EUR", "BTC");
+            Console.WriteLine("Start receiving");
+            Begin();
+            Console.ReadKey();
+        }
+        static async void Begin()
+        {
+
+            var info = GetExchangeInfo("EUR", "ETH");
 
             var dt = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddMilliseconds(info.Timestamp).ToLocalTime();
 
             Console.WriteLine(string.Format("{0} {1} {2}", dt.ToShortDateString(), dt.ToShortTimeString(), info.FriendlyLast));
-            Main();
+            if (Calculate(info.FriendlyLast) == false)
+            {
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"f:/Resources/Back at It.wav");
+                player.Play();
+                await Task.Delay(3000);
+            }
+
+            await Task.Delay(1000);
+            Begin();
+        }
+        static bool Calculate(string tmp)
+        {
+            Char delitimer = ' ';
+            String[] income = tmp.Split(delitimer);
+
+            double EthCurrency =  Convert.ToDouble(income[3]);
+            const double TotalHashRate = 241.207;
+            const double HashRate = 136;
+            const double PowerUsage = 99.8;
+            const double PowerCost = 0.03629;
+
+
+            if (((HashRate * 100) / TotalHashRate) * EthCurrency > PowerCost * PowerUsage)
+            {
+                return true;
+            }
+            else return false;
+
         }
         static ExchangeInfo GetExchangeInfo(string from, string to)
         {
@@ -25,7 +60,6 @@ namespace Bitcoin_Currency
             }
 
         }
-
     }
     public class ExchangeInfo
     {
