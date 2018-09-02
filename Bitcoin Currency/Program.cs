@@ -19,17 +19,16 @@ namespace Bitcoin_Currency
 
             var info = GetExchangeInfo("EUR", "ETH");
 
-            var dt = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddMilliseconds(info.Timestamp).ToLocalTime();
 
-            Console.WriteLine(string.Format("{0} {1} {2}", dt.ToShortDateString(), dt.ToShortTimeString(), info.FriendlyLast));
+            Console.WriteLine(string.Format("{0} {1} {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), info.FriendlyLast));
             if (Calculate(info.FriendlyLast) == false)
             {
-                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"f:/Resources/Back at It.wav");
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Resources/Alarm.wav");
                 player.Play();
                 await Task.Delay(3000);
             }
 
-            await Task.Delay(1000);
+            await Task.Delay(3000);
             Begin();
         }
         static bool Calculate(string tmp)
